@@ -3,7 +3,7 @@
     Can be registered to a videojs instance as a plugin
 */
 
-module.exports = videojs => {
+module.exports = (videojs) => {
   require('./lib/polyfills');
 
   const Plugin = videojs.getPlugin('plugin');
@@ -21,7 +21,13 @@ module.exports = videojs => {
     showFullScreen: true,
     showMarkerShapeAndTooltips: true,
     internalCommenting: true,
-    startInAnnotationMode: false
+    startInAnnotationMode: false,
+    permissionToDeleteComment: function (comment) {
+      return true;
+    },
+    permissionToDeleteAnnotation: function (comment_list) {
+      return true;
+    }
   });
 
   return class AnnotationComments extends Plugin {
@@ -164,9 +170,7 @@ module.exports = videojs => {
       if (this.player) {
         this.player.annotationComments = null;
         $(this.player.el()).removeClass('vac-active');
-        $(this.player.el())
-          .find("[class^='vac-']")
-          .remove();
+        $(this.player.el()).find("[class^='vac-']").remove();
       }
       super.dispose();
     }

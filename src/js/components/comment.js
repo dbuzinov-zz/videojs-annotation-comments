@@ -17,6 +17,7 @@ module.exports = class Comment extends PlayerUIComponent {
     this.body = data.body;
     this.timestamp = moment(data.meta.datetime).unix();
     this.timeSince = this.timeSince();
+    this.permissionToDeleteComment = this.permissionToDeleteComment();
 
     this.$el = $(this.render());
   }
@@ -39,13 +40,18 @@ module.exports = class Comment extends PlayerUIComponent {
       id: this.id,
       body: this.body,
       meta: this.meta,
-      timeSince: this.timeSince
+      timeSince: this.timeSince,
+      permissionToDeleteComment: this.permissionToDeleteComment
     });
   }
 
   // Return time since comment timestamp
   timeSince() {
     return moment(this.meta.datetime).fromNow();
+  }
+
+  permissionToDeleteComment() {
+    return this.plugin.options.permissionToDeleteComment(this);
   }
 
   teardown(destroy = false) {
